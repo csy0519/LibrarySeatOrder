@@ -1,10 +1,14 @@
-package windowSys;
+package login;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.SQLException;
+
 import javax.swing.*;
 
-import windowSys.LoginError.LoginErrorCode;
+import login.LoginError.LoginErrorCode;
+import windowSys.SeatOrdering;
+import login.AccessDb;
 
 class LoginError extends JDialog{		//用户名不正确时弹出的对话框类, finished class
 	
@@ -17,7 +21,7 @@ class LoginError extends JDialog{		//用户名不正确时弹出的对话框类, finished clas
 	}
 	
 	public LoginError(Login LoginWin, int ErrorCode) {
-		super(LoginWin, "登录错误", true);
+		JDialog d = new JDialog(LoginWin, "登录错误", true);
 		JPanel jp = new JPanel(new BorderLayout());
 		switch(ErrorCode) {
 			case LoginErrorCode.NoCard : 			jp.add(new JLabel("请刷卡！", JLabel.CENTER), BorderLayout.CENTER);		break;
@@ -28,9 +32,11 @@ class LoginError extends JDialog{		//用户名不正确时弹出的对话框类, finished clas
 			default : 								jp.add(new JLabel("未知错误！", JLabel.CENTER), BorderLayout.CENTER);		break;
 		}
 
-		getContentPane().add(jp);
-		setSize(300, 200);
-		setLocationRelativeTo(null);
+		d.getContentPane().add(jp);
+		d.setSize(300, 200);
+		d.setResizable(false);
+		d.setLocationRelativeTo(null);
+		d.setVisible(true);
 	}
 }
 
@@ -51,14 +57,14 @@ public class Login extends JFrame {
 		return result;
 	}
 	
-	boolean EqualToDB(String acc) {			//数据库对比用户名, To be continued method
-		boolean result = false;
-		
-		return result;
+	private String FindUser(int UID, int retValue) throws ClassNotFoundException, SQLException {
+		return new AccessDb().search(UID, retValue);
 	}
 	
 	public Login() {						//登录模块的具体实现, To be continued construct method
-		Container container = getContentPane();
+		JFrame f = new JFrame();
+		
+		Container container = f.getContentPane();
 		container.setLayout(new GridLayout(4, 1));		//创建4行1列网格布局
 		
 		JPanel p1 = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -71,7 +77,7 @@ public class Login extends JFrame {
 		final JButton LoginBtn = new JButton("登录");
 		final JButton RegBtn = new JButton("注册");
 		final JButton ResetBtn = new JButton("重置");
-		UserName.setEditable(false);		//禁止用户手动输入用户名
+//		UserName.setEditable(false);		//禁止用户手动输入用户名
 		
 		LoginBtn.addActionListener(new ActionListener() {		//登录按钮监视器
 			
@@ -81,18 +87,32 @@ public class Login extends JFrame {
 				if(UserName.getText().equals("请刷卡")) {
 					new LoginError(Login.this, LoginErrorCode.NoCard).setVisible(true);
 				}else if(StringIsDig(UserName.getText())){
-					if(EqualToDB(UserName.getText())) {			//对比数据库
-						
-						/**************************************进入选座界面, To be continued*********************************/
-						
+					try {
+						if(FindUser(Integer.parseInt(UserName.getText()), 1) == Password.getText()) {			//对比数据库
+							
+							/**************************************进入选座界面, To be continued*********************************/
+//							new SeatOrdering(Integer.parseInt(UserName.getText()));
 						System.out.println("login");
-						System.out.println(UserName.getText());
+						System.out.println(Integer.parseInt(UserName.getText()));
 						System.out.println(Password.getText());
-						
-						/**************************************调用结束*************************************/
-						
-					}else {
-						new LoginError(Login.this, LoginErrorCode.Unregistered).setVisible(true);
+							
+							
+							/**************************************调用结束*************************************/
+							
+						}else if(FindUser(Integer.parseInt(UserName.getText()), 1) == null){
+							new LoginError(Login.this, LoginErrorCode.Unregistered).setVisible(true);
+						}else {
+							new LoginError(Login.this, LoginErrorCode.WrongPsw);
+						}
+					} catch (NumberFormatException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					} catch (ClassNotFoundException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					} catch (SQLException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
 					}
 					
 				}else {
@@ -155,11 +175,12 @@ public class Login extends JFrame {
 		container.add(p3);
 		container.add(p4);
 		
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		setTitle("图书馆座位预约系统");
-		setSize(600, 300);
-		setLocationRelativeTo(null);
-		setVisible(true);
+		f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		f.setTitle("图书馆座位预约系统");
+		f.setSize(600, 300);
+		f.setResizable(false);
+		f.setLocationRelativeTo(null);
+		f.setVisible(true);
 		
 	}
 }
