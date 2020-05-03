@@ -6,12 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-
 public class AccessDb{
 	
-	//查找方法   输入学号  1返回用户的名字, 0返回用户密码
-	public String search(long account, int retValue)throws ClassNotFoundException,SQLException{
+	//查找方法   输入学号  返回用户的名字
+	public String searchname(int account)throws ClassNotFoundException,SQLException{
 		String name = null;
 		String[] n=new String[1000];
 		int i=0;
@@ -22,13 +20,8 @@ public class AccessDb{
 		ResultSet rs = stmt.executeQuery("SELECT*FROM student");
 		while(rs.next() && account!=rs.getLong("Account")) {
 		}
-		if(account==rs.getLong("Account")) {
-			if(retValue == 1) {
-				name=rs.getString("UserName");
-			}else if (retValue == 0) {
-				name = rs.getString("pws");
-			}
-			
+		if(!rs.isAfterLast()) {
+			name=rs.getString("UserName");
 		}
 		else {
 			name=null;
@@ -38,7 +31,29 @@ public class AccessDb{
 		conn.close();	
 		return name;
 	}
-	
+	//查找密码
+	public String searchpws(long account)throws ClassNotFoundException,SQLException{
+		String name = null;
+		String[] n=new String[1000];
+		int i=0;
+		Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
+		String accdbPath = "D:/library.accdb";
+		Connection conn = DriverManager.getConnection("jdbc:ucanaccess://" + accdbPath);
+		Statement stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery("SELECT*FROM student");
+		while(rs.next() && account!=rs.getLong("Account")) {
+		}
+		if(!rs.isAfterLast()) {
+			name=rs.getString("pws");
+		}
+		else {
+			name=null;
+		}
+		rs.close();
+		stmt.close();
+		conn.close();	
+		return name;
+	}
 	
 	//注册方法 输入用户学号 用户名字 用户密码 注册用户信息
 	public void add(long account, String name, String Pws)throws ClassNotFoundException,SQLException{
@@ -63,15 +78,15 @@ public class AccessDb{
 		stmt.executeUpdate("update student set pws='"+pWs+"' where Account='"+aCcount+"' ");
 		rs.close();
 		stmt.close();
-		conn.close();
-	}
-//}
-
-//public class access2{
-	public static void main(String[] args) throws ClassNotFoundException, SQLException{  //调用数据库时，前面要加  throws ClassNotFoundException, SQLException
-		AccessDb acc=new AccessDb();
-		//acc.updata(20186698,"20186698");
-		//acc.add(20183054, "wujinliang", "20183054");
-		System.out.println(acc.search(20183054, 0));
+		conn.close();	
 	}
 }
+
+//public class access2{
+//	public static void main(String[] args) throws ClassNotFoundException, SQLException{  //调用数据库时，前面要加  throws ClassNotFoundException, SQLException
+//		AccessDb acc=new AccessDb();
+		//acc.updata(20186698,"20186698");
+		//acc.add(20183054, "wujinliang", "20183054");
+//		System.out.println(acc.search(20183034));
+//	}
+//}

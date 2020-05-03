@@ -7,12 +7,17 @@ import java.sql.SQLException;
 import javax.swing.*;
 
 import login.LoginError.LoginErrorCode;
-import windowSys.SeatOrdering;
 import login.AccessDb;
+import login.Registration;
 
-class LoginError extends JDialog{		//用户名不正确时弹出的对话框类, finished class
+class LoginError extends JDialog{		//用户名不正确时弹出的对话框类
 	
-	class LoginErrorCode{				//关于用户名的错误码, finished inner class
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	class LoginErrorCode{				//关于用户名的错误码
 		final static int NoCard = 0;
 		final static int Unregistered = 1;
 		final static int Registered = 2;
@@ -20,16 +25,16 @@ class LoginError extends JDialog{		//用户名不正确时弹出的对话框类, finished clas
 		final static int WrongPsw = 4;
 	}
 	
-	public LoginError(Login LoginWin, int ErrorCode) {
+	public LoginError(JFrame LoginWin, int ErrorCode) {
 		JDialog d = new JDialog(LoginWin, "登录错误", true);
 		JPanel jp = new JPanel(new BorderLayout());
 		switch(ErrorCode) {
-			case LoginErrorCode.NoCard : 			jp.add(new JLabel("请刷卡！", JLabel.CENTER), BorderLayout.CENTER);		break;
-			case LoginErrorCode.Unregistered : 		jp.add(new JLabel("用户未注册！", JLabel.CENTER), BorderLayout.CENTER);		break;
-			case LoginErrorCode.Registered : 		jp.add(new JLabel("该用户名已被注册！", JLabel.CENTER), BorderLayout.CENTER);	break;
-			case LoginErrorCode.InvaildUserName : 	jp.add(new JLabel("无效用户名！", JLabel.CENTER), BorderLayout.CENTER);		break;
-			case LoginErrorCode.WrongPsw : 			jp.add(new JLabel("密码错误！", JLabel.CENTER), BorderLayout.CENTER);		break;
-			default : 								jp.add(new JLabel("未知错误！", JLabel.CENTER), BorderLayout.CENTER);		break;
+			case LoginErrorCode.NoCard : 			jp.add(new JLabel("请刷卡！", JLabel.CENTER), BorderLayout.CENTER);					break;
+			case LoginErrorCode.Unregistered : 		jp.add(new JLabel("用户未注册！", JLabel.CENTER), BorderLayout.CENTER);					break;
+			case LoginErrorCode.Registered : 		jp.add(new JLabel("该卡号已注册，请登录！", JLabel.CENTER), BorderLayout.CENTER);			break;
+			case LoginErrorCode.InvaildUserName : 	jp.add(new JLabel("无效用户名！", JLabel.CENTER), BorderLayout.CENTER);					break;
+			case LoginErrorCode.WrongPsw : 			jp.add(new JLabel("密码错误！", JLabel.CENTER), BorderLayout.CENTER);					break;
+			default : 								jp.add(new JLabel("未知错误，如影响使用请联系开发人员！", JLabel.CENTER), BorderLayout.CENTER);	break;
 		}
 
 		d.getContentPane().add(jp);
@@ -43,8 +48,14 @@ class LoginError extends JDialog{		//用户名不正确时弹出的对话框类, finished clas
 
 
 public class Login extends JFrame {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public String CurrentUser = null;
 
-	public boolean StringIsDig(String s) {		//判断字符串是否均为数字, finished method
+	public boolean StringIsDig(String s) {		//判断字符串是否均为数字
 		boolean result = true;
 		
 		for(int i = 0; i < s.length(); i++) {
@@ -57,8 +68,12 @@ public class Login extends JFrame {
 		return result;
 	}
 	
-	private String FindUser(int UID, int retValue) throws ClassNotFoundException, SQLException {
-		return new AccessDb().search(UID, retValue);
+	private String FindUserpws(int UID) throws ClassNotFoundException, SQLException {
+		return new AccessDb().searchpws(UID);
+	}
+	
+	private String FindUsername(int UID) throws ClassNotFoundException, SQLException {
+		return new AccessDb().searchname(UID);
 	}
 	
 	public Login() {						//登录模块的具体实现, To be continued construct method
@@ -75,6 +90,7 @@ public class Login extends JFrame {
 		final JTextField UserName = new JTextField("请刷卡", 10);
 		final JTextField Password = new JTextField("请输入密码", 10);
 		final JButton LoginBtn = new JButton("登录");
+		final JButton ForgetBtn = new JButton("忘记密码");
 		final JButton RegBtn = new JButton("注册");
 		final JButton ResetBtn = new JButton("重置");
 //		UserName.setEditable(false);		//禁止用户手动输入用户名
@@ -88,21 +104,20 @@ public class Login extends JFrame {
 					new LoginError(Login.this, LoginErrorCode.NoCard).setVisible(true);
 				}else if(StringIsDig(UserName.getText())){
 					try {
-						if(FindUser(Integer.parseInt(UserName.getText()), 1) == Password.getText()) {			//对比数据库
-							
-							/**************************************进入选座界面, To be continued*********************************/
+						if(FindUsername(Integer.parseInt(UserName.getText())) != null) {
+							if(FindUserpws(Integer.parseInt(UserName.getText())).equals(Password.getText())) {			//对比数据库
+								
+								/**************************************进入选座界面, To be continued*********************************/
 //							new SeatOrdering(Integer.parseInt(UserName.getText()));
-						System.out.println("login");
-						System.out.println(Integer.parseInt(UserName.getText()));
-						System.out.println(Password.getText());
-							
-							
-							/**************************************调用结束*************************************/
-							
-						}else if(FindUser(Integer.parseInt(UserName.getText()), 1) == null){
+							System.out.println("login");
+							System.out.println(Integer.parseInt(UserName.getText()));
+							System.out.println(Password.getText());
+								/**************************************调用结束*************************************/
+							}else {
+								new LoginError(Login.this, LoginErrorCode.WrongPsw);
+							}
+						}else{
 							new LoginError(Login.this, LoginErrorCode.Unregistered).setVisible(true);
-						}else {
-							new LoginError(Login.this, LoginErrorCode.WrongPsw);
 						}
 					} catch (NumberFormatException e1) {
 						// TODO 自动生成的 catch 块
@@ -114,10 +129,18 @@ public class Login extends JFrame {
 						// TODO 自动生成的 catch 块
 						e1.printStackTrace();
 					}
-					
 				}else {
 					new LoginError(Login.this, LoginErrorCode.InvaildUserName).setVisible(true);
 				}
+			}
+		});
+		
+		ForgetBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO 自动生成的方法存根
+				/**********************************************************未实现的方法**********************************************************************/
 			}
 		});
 		
@@ -129,20 +152,22 @@ public class Login extends JFrame {
 				if(UserName.getText().equals("请刷卡")) {
 					new LoginError(Login.this, LoginErrorCode.NoCard).setVisible(true);
 				}else if(StringIsDig(UserName.getText())){
-					if(!EqualToDB(UserName.getText())) {			//对比数据库
-						
-						/**************************************写入数据库, To be continued*********************************/
-						
-						System.out.println("registration");
-						System.out.println(UserName.getText());
-						System.out.println(Password.getText());
-						
-						/**************************************调用结束*************************************/
-						
-					}else {
-						new LoginError(Login.this, LoginErrorCode.Registered).setVisible(true);
+					try {
+						if(FindUsername(Integer.parseInt(UserName.getText())) == null) {
+							new Registration(UserName.getText());
+						}else{
+							new LoginError(Login.this, LoginErrorCode.Registered).setVisible(true);
+						}
+					} catch (NumberFormatException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					} catch (ClassNotFoundException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					} catch (SQLException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
 					}
-					
 				}else {
 					new LoginError(Login.this, LoginErrorCode.InvaildUserName).setVisible(true);
 				}
@@ -150,7 +175,7 @@ public class Login extends JFrame {
 			}
 		});
 		
-		ResetBtn.addActionListener(new ActionListener() {		//重置按钮监视器, finished
+		ResetBtn.addActionListener(new ActionListener() {		//重置按钮监视器
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -167,6 +192,7 @@ public class Login extends JFrame {
 		p3.add(new JLabel("密码"));
 		p3.add(Password);
 		p4.add(LoginBtn);
+		p4.add(ForgetBtn);
 		p4.add(RegBtn);
 		p4.add(ResetBtn);
 		
