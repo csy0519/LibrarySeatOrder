@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import javax.swing.*;
 
 import login.LoginError.LoginErrorCode;
-import windowSys.SeatOrdering;
+import windowSys.AfterLogin;
 
 class LoginError extends JDialog{		//用户名不正确时弹出的对话框类
 	
@@ -52,7 +52,7 @@ public class Login extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public String CurrentUser = null;
+	public static String CurrentUser = null;
 
 	public boolean StringIsDig(String s) {		//判断字符串是否均为数字
 		boolean result = true;
@@ -108,8 +108,8 @@ public class Login extends JFrame {
 							if(FindUserpws(Integer.parseInt(UserName.getText())).equals(String.valueOf(Password.getPassword()))) {			//对比数据库
 								
 								/**************************************进入选座界面, To be continued**********************************************/
-								new SeatOrdering(Integer.parseInt(UserName.getText()));
-								Login.this.dispose();
+								new AfterLogin(Integer.parseInt(UserName.getText()));
+								f.dispose();
 //								System.out.println("login");
 //								System.out.println(Integer.parseInt(UserName.getText()));
 //								System.out.println(Password.getText());

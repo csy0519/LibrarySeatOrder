@@ -107,7 +107,7 @@ public class VerifyID extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	VerifyID(JFrame win, int UID){
+	public VerifyID(JFrame win, int UID){
 		JDialog rd = new JDialog(win, "身份验证", true);
 		
 		Container c = rd.getContentPane();
