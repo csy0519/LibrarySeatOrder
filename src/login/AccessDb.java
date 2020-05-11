@@ -1,6 +1,5 @@
 package login;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,10 +8,9 @@ import java.sql.Statement;
 public class AccessDb{
 	
 	//查找方法   输入学号  返回用户的名字
-	public String searchname(int account)throws ClassNotFoundException,SQLException{
+	public String searchname(long account)throws ClassNotFoundException,SQLException{
 		String name = null;
-		String[] n=new String[1000];
-		int i=0;
+		
 		Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
 		String accdbPath = "D:/library.accdb";
 		Connection conn = DriverManager.getConnection("jdbc:ucanaccess://" + accdbPath);
@@ -34,8 +32,7 @@ public class AccessDb{
 	//查找密码
 	public String searchpws(long account)throws ClassNotFoundException,SQLException{
 		String name = null;
-		String[] n=new String[1000];
-		int i=0;
+		
 		Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
 		String accdbPath = "D:/library.accdb";
 		Connection conn = DriverManager.getConnection("jdbc:ucanaccess://" + accdbPath);
@@ -81,12 +78,3 @@ public class AccessDb{
 		conn.close();	
 	}
 }
-
-//public class access2{
-//	public static void main(String[] args) throws ClassNotFoundException, SQLException{  //调用数据库时，前面要加  throws ClassNotFoundException, SQLException
-//		AccessDb acc=new AccessDb();
-		//acc.updata(20186698,"20186698");
-		//acc.add(20183054, "wujinliang", "20183054");
-//		System.out.println(acc.search(20183034));
-//	}
-//}

@@ -22,11 +22,6 @@ class Registration extends JFrame {
 				res = true;
 			}
 		}
-		
-		if(!res) {
-			/***************************删除新建的用户***************************/
-		}
-		
 		return res;
 	}
 	
@@ -59,6 +54,22 @@ class Registration extends JFrame {
 		final JTextField Unam = new JTextField("", 10);
 		final JButton RealRegBtn = new JButton("点击注册");
 		
+		Pswt.addKeyListener(new KeyAdapter() {
+			public void keyPressed(final KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					Unam.requestFocus();
+				}
+			}
+		});
+		
+		Unam.addKeyListener(new KeyAdapter() {
+			public void keyPressed(final KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					RealRegBtn.doClick();
+				}
+			}
+		});
+		
 		RealRegBtn.addActionListener(new ActionListener() {
 			
 			@Override
@@ -66,11 +77,7 @@ class Registration extends JFrame {
 				// TODO 自动生成的方法存根
 				try {
 						RegResultD(reg, UserReg(Integer.parseInt(UID), Unam.getText(), Pswt.getText()));
-						reg.dispose();
-//						System.out.println("registration");
-//						System.out.println(UID);
-//						System.out.println(Pswt.getText());
-//						System.out.println(Unam.getText());					
+						reg.dispose();				
 				} catch (NumberFormatException e1) {
 					// TODO 自动生成的 catch 块
 					e1.printStackTrace();

@@ -2,6 +2,7 @@ package windowSys;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.SQLException;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -10,6 +11,11 @@ import login.Login;
 import login.VerifyID;
 
 public class AfterLogin extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public AfterLogin(int UID) {
 		JFrame af = new JFrame("卡号：" + UID + "在线选座");
 		
@@ -44,7 +50,6 @@ public class AfterLogin extends JFrame {
 				if(title.equals("密码修改")){
 					new VerifyID(af, UID);
 				}
-				System.out.println(title);
 			}
 		});
 		
@@ -54,7 +59,14 @@ public class AfterLogin extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO 自动生成的方法存根
 				af.dispose();
-				new Login();
+				try {
+					Login.CurrentUser = null;
+					Login.f.setVisible(true);
+
+				} catch (Exception e1) {
+					// TODO 自动生成的 catch 块
+					e1.printStackTrace();
+				}
 				Login.CurrentUser = null;
 				
 			}
@@ -80,18 +92,24 @@ public class AfterLogin extends JFrame {
 		
 		af.getContentPane().add(tab, BorderLayout.CENTER);
 		new SeatOrdering(af, UID);
-		tab.addTab("教室预定", null, SeatOrdering.con);
-		tab.addTab("个人信息", null, null);
+		try {
+			new Inquire(UID);
+			new Companion(UID);
+		} catch (ClassNotFoundException e1) {
+			// TODO 自动生成的 catch 块
+			e1.printStackTrace();
+		} catch (SQLException e1) {
+			// TODO 自动生成的 catch 块
+			e1.printStackTrace();
+		}
+		tab.addTab("教室预定", null, SeatOrdering.Container_SeatOrdering);
+		tab.addTab("个人信息", null, Inquire.Container_Inquire);
 		tab.addTab("密码修改", null, new JLabel("请在弹出窗口中完成操作", JLabel.CENTER));
-		tab.addTab("查询同伴", null, null);
+		tab.addTab("查询同伴", null, Companion.Container_Companion);
 		
 		af.setSize(600, 600);
 		af.setLocationRelativeTo(null);
 		af.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		af.setVisible(true);
-	}
-	
-	public static void main(String args[]) {
-		new AfterLogin(123);
 	}
 }

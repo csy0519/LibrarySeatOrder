@@ -23,12 +23,14 @@ class PswChange extends JFrame {
 		PswChangeDia(Boolean reslut){
 			JDialog ConfirmErr = new JDialog(PswChange.this, "提示", true);
 			JPanel cp = new JPanel(new BorderLayout());
+			
 			if(reslut) {
 				cp.add(new JLabel("更改成功！", JLabel.CENTER), BorderLayout.CENTER);
 				PswChange.this.dispose();
 			}else {
 				cp.add(new JLabel("两次密码输入不一致！", JLabel.CENTER), BorderLayout.CENTER);
 			}
+			
 			ConfirmErr.getContentPane().add(cp);
 			ConfirmErr.setSize(200, 100);
 			ConfirmErr.setResizable(false);
@@ -53,6 +55,22 @@ class PswChange extends JFrame {
 		
 		newpsw.setEchoChar('*');
 		confirm.setEchoChar('*');
+		
+		newpsw.addKeyListener(new KeyAdapter() {
+			public void keyPressed(final KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					confirm.requestFocus();
+				}
+			}
+		});
+		
+		confirm.addKeyListener(new KeyAdapter() {
+			public void keyPressed(final KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					confirmButton.doClick();
+				}
+			}
+		});
 		
 		confirmButton.addActionListener(new ActionListener() {
 			
@@ -122,6 +140,14 @@ public class VerifyID extends JDialog {
 		JTextField EnterCode = new JTextField("功能暂不可用", 10);
 		JButton btn = new JButton("身份验证");
 		EnterCode.setEditable(false);
+		
+		EnterName.addKeyListener(new KeyAdapter() {
+			public void keyPressed(final KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					btn.doClick();
+				}
+			}
+		});
 		
 		btn.addActionListener(new ActionListener() {
 			

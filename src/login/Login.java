@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import javax.swing.*;
 
 import login.LoginError.LoginErrorCode;
+import login.TestRxTx;
 import windowSys.AfterLogin;
 
 class LoginError extends JDialog{		//用户名不正确时弹出的对话框类
@@ -53,7 +54,12 @@ public class Login extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	public static String CurrentUser = null;
-
+	public static String CurrentCard = null;
+	public static boolean ThreadBlock = true;
+	public static JFrame f = new JFrame();
+	
+	static final JTextField UserName = new JTextField("请刷卡", 10);
+	
 	public boolean StringIsDig(String s) {		//判断字符串是否均为数字
 		boolean result = true;
 		
@@ -75,9 +81,7 @@ public class Login extends JFrame {
 		return new AccessDb().searchname(UID);
 	}
 	
-	public Login() {						//登录模块的具体实现, To be continued construct method
-		JFrame f = new JFrame();
-		
+	public Login() {						//登录模块的具体实现
 		Container container = f.getContentPane();
 		container.setLayout(new GridLayout(4, 1));		//创建4行1列网格布局
 		
@@ -86,127 +90,14 @@ public class Login extends JFrame {
 		JPanel p3 = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		JPanel p4 = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		final JTextField UserName = new JTextField("请刷卡", 10);
+		
 		final JPasswordField Password = new JPasswordField("", 10);
 		final JButton LoginBtn = new JButton("登录");
 		final JButton ForgetBtn = new JButton("忘记密码");
 		final JButton RegBtn = new JButton("注册");
 		final JButton ResetBtn = new JButton("重置");
-//		UserName.setEditable(false);		//禁止用户手动输入用户名
+		UserName.setEditable(false);		//禁止用户手动输入用户名
 		Password.setEchoChar('*');
-		
-		LoginBtn.addActionListener(new ActionListener() {		//登录按钮监视器
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO 自动生成的方法存根
-				if(UserName.getText().equals("请刷卡")) {
-					new LoginError(Login.this, LoginErrorCode.NoCard).setVisible(true);
-				}else if(StringIsDig(UserName.getText())){
-					try {
-						if(FindUsername(Integer.parseInt(UserName.getText())) != null) {
-							if(FindUserpws(Integer.parseInt(UserName.getText())).equals(String.valueOf(Password.getPassword()))) {			//对比数据库
-								
-								/**************************************进入选座界面, To be continued**********************************************/
-								new AfterLogin(Integer.parseInt(UserName.getText()));
-								f.dispose();
-//								System.out.println("login");
-//								System.out.println(Integer.parseInt(UserName.getText()));
-//								System.out.println(Password.getText());
-								/**************************************调用结束****************************************/
-							}else {
-								new LoginError(Login.this, LoginErrorCode.WrongPsw);
-							}
-						}else{
-							new LoginError(Login.this, LoginErrorCode.Unregistered).setVisible(true);
-						}
-					} catch (NumberFormatException e1) {
-						// TODO 自动生成的 catch 块
-						e1.printStackTrace();
-					} catch (ClassNotFoundException e1) {
-						// TODO 自动生成的 catch 块
-						e1.printStackTrace();
-					} catch (SQLException e1) {
-						// TODO 自动生成的 catch 块
-						e1.printStackTrace();
-					}
-				}else {
-					new LoginError(Login.this, LoginErrorCode.InvaildUserName).setVisible(true);
-				}
-			}
-		});
-		
-		ForgetBtn.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO 自动生成的方法存根
-				if(UserName.getText().equals("请刷卡")) {
-					new LoginError(Login.this, LoginErrorCode.NoCard).setVisible(true);
-				}else if(StringIsDig(UserName.getText())){
-					try {
-						if(FindUsername(Integer.parseInt(UserName.getText())) != null) {
-							new VerifyID(Login.this, Integer.parseInt(UserName.getText()));
-						}else{
-							new LoginError(Login.this, LoginErrorCode.Unregistered).setVisible(true);
-						}
-					} catch (NumberFormatException e1) {
-						// TODO 自动生成的 catch 块
-						e1.printStackTrace();
-					} catch (ClassNotFoundException e1) {
-						// TODO 自动生成的 catch 块
-						e1.printStackTrace();
-					} catch (SQLException e1) {
-						// TODO 自动生成的 catch 块
-						e1.printStackTrace();
-					}
-				}else {
-					new LoginError(Login.this, LoginErrorCode.InvaildUserName).setVisible(true);
-				}
-			}
-		});
-		
-		RegBtn.addActionListener(new ActionListener() {			//注册按钮监视器
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO 自动生成的方法存根				
-				if(UserName.getText().equals("请刷卡")) {
-					new LoginError(Login.this, LoginErrorCode.NoCard).setVisible(true);
-				}else if(StringIsDig(UserName.getText())){
-					try {
-						if(FindUsername(Integer.parseInt(UserName.getText())) == null) {
-							new Registration(UserName.getText());
-						}else{
-							new LoginError(Login.this, LoginErrorCode.Registered).setVisible(true);
-						}
-					} catch (NumberFormatException e1) {
-						// TODO 自动生成的 catch 块
-						e1.printStackTrace();
-					} catch (ClassNotFoundException e1) {
-						// TODO 自动生成的 catch 块
-						e1.printStackTrace();
-					} catch (SQLException e1) {
-						// TODO 自动生成的 catch 块
-						e1.printStackTrace();
-					}
-				}else {
-					new LoginError(Login.this, LoginErrorCode.InvaildUserName).setVisible(true);
-				}
-				
-			}
-		});
-		
-		ResetBtn.addActionListener(new ActionListener() {		//重置按钮监视器
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO 自动生成的方法存根
-				UserName.setText("请刷卡");
-				Password.setText("");
-				Password.requestFocus();
-			}
-		});
 		
 		p1.add(new JLabel("欢迎使用图书馆座位预约系统，请刷卡"));
 		p2.add(new JLabel("卡号"));
@@ -230,5 +121,136 @@ public class Login extends JFrame {
 		f.setLocationRelativeTo(null);
 		f.setVisible(true);
 		
+		Password.addKeyListener(new KeyAdapter() {
+			public void keyPressed(final KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					LoginBtn.doClick();
+				}
+			}
+		});
+		
+		LoginBtn.addActionListener(new ActionListener() {		//登录按钮监视器
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO 自动生成的方法存根
+				if(UserName.getText().equals("请刷卡")) {
+					new LoginError(Login.this, LoginErrorCode.NoCard);
+				}else if(StringIsDig(UserName.getText())){
+					try {
+						if(FindUsername(Integer.parseInt(UserName.getText())) != null) {
+							if(FindUserpws(Integer.parseInt(UserName.getText())).equals(String.valueOf(Password.getPassword()))) {			//对比数据库
+								new AfterLogin(Integer.parseInt(UserName.getText()));
+								f.setVisible(false);
+								ResetBtn.doClick();
+							}else {
+								new LoginError(Login.this, LoginErrorCode.WrongPsw);
+							}
+						}else{
+							new LoginError(Login.this, LoginErrorCode.Unregistered);
+						}
+					} catch (NumberFormatException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					} catch (ClassNotFoundException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					} catch (SQLException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					}
+				}else {
+					new LoginError(Login.this, LoginErrorCode.InvaildUserName);
+				}
+			}
+		});
+		
+		ForgetBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO 自动生成的方法存根
+				if(UserName.getText().equals("请刷卡")) {
+					new LoginError(Login.this, LoginErrorCode.NoCard);
+				}else if(StringIsDig(UserName.getText())){
+					try {
+						if(FindUsername(Integer.parseInt(UserName.getText())) != null) {
+							new VerifyID(Login.this, Integer.parseInt(UserName.getText()));
+						}else{
+							new LoginError(Login.this, LoginErrorCode.Unregistered);
+						}
+					} catch (NumberFormatException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					} catch (ClassNotFoundException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					} catch (SQLException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					}
+				}else {
+					new LoginError(Login.this, LoginErrorCode.InvaildUserName);
+				}
+			}
+		});
+		
+		RegBtn.addActionListener(new ActionListener() {			//注册按钮监视器
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO 自动生成的方法存根				
+				if(UserName.getText().equals("请刷卡")) {
+					new LoginError(Login.this, LoginErrorCode.NoCard);
+				}else if(StringIsDig(UserName.getText())){
+					try {
+						if(FindUsername(Integer.parseInt(UserName.getText())) == null) {
+							new Registration(UserName.getText());
+						}else{
+							new LoginError(Login.this, LoginErrorCode.Registered);
+						}
+					} catch (NumberFormatException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					} catch (ClassNotFoundException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					} catch (SQLException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					}
+				}else {
+					new LoginError(Login.this, LoginErrorCode.InvaildUserName);
+				}
+				
+			}
+		});
+		
+		ResetBtn.addActionListener(new ActionListener() {		//重置按钮监视器
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO 自动生成的方法存根
+				UserName.setText("请刷卡");
+				Password.setText("");
+				CurrentCard = null;
+				CurrentUser = null;
+				TestRxTx.currentCard = null;
+				Password.requestFocus();
+			}
+		});
+		
+		while(true) {
+			if(TestRxTx.currentCard != (CurrentCard)) {
+				CurrentCard = TestRxTx.currentCard;
+				UserName.setText(CurrentCard);
+			}
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e1) {
+				// TODO 自动生成的 catch 块
+				e1.printStackTrace();
+			}
+		}
 	}
 }

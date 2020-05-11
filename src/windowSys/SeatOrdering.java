@@ -1,15 +1,9 @@
 package windowSys;
-
+import windowSys.Data;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Vector;
 import javax.swing.*;
-import javax.swing.table.JTableHeader;
 import java.util.*;
-
-
-//import login.LoginError.LoginErrorCode;
-
 
 class YuyueError extends JDialog{
 	
@@ -38,62 +32,36 @@ class YuyueError extends JDialog{
 			d.setLocationRelativeTo(null);
 			d.setVisible(true);
 	}
-	
-	
-	
-	
 }
-
-
-
-
 
 public class SeatOrdering extends JFrame {
 	
-	
-	public static Container con;
-	
-	public static long[][][] Yuyue=new long[3][13][45];
-	public static int[][][] hh=new int[3][13][45];
-	public static int[][][] mm=new int[3][13][45];
-	public static int[][][] ss=new int[3][13][45];
-	public static int Floor;
-	public static int Start;
-	public static int End;
-	public void TableInit() {
-		
-	}
+	public static Container Container_SeatOrdering;
 	
 	public SeatOrdering(JFrame win, long CurrentUserName){
 		JFrame SOFrame = new JFrame("座位预约");
 		Container c = SOFrame.getContentPane();
 		c.setLayout(new GridLayout(5, 1));  //创建6行1列网格布局
-		
+		Data data=new Data();
 		
 		
 		JPanel p1 = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		JPanel p2 = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		JPanel p3 = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		JPanel p4 = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		JPanel p5 = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
-//		JPanel p6 = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 5));
-		
-		
-		
-		
-		
+		JPanel p5 = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));		
 		
 		String[] columnTime=new String[] {"","8`9","9`10","10`11","11`12","12`13","13`14","14`15","15`16","16`17","17`18","18`19","19`20"};
 		String[][] columnRoom=new String[3][13];
-		Yuyue[0][0][0]=1;
-		Yuyue[1][0][0]=2;
-		Yuyue[2][0][0]=3;
+		data.Yuyue[0][0][0]=1;
+		data.Yuyue[1][0][0]=2;
+		data.Yuyue[2][0][0]=3;
 		for(int i=0;i<3;i++) {
 			for(int j=0;j<13;j++) {
-				int n=0;
+				int n=0; 
 				for(int k=0;k<45;k++) {
 					
-					if(j>0 && Yuyue[i][j][k]==0) {
+					if(j>0 && data.Yuyue[i][j][k]==0) {
 						n++;
 					}
 				}
@@ -101,7 +69,7 @@ public class SeatOrdering extends JFrame {
 					columnRoom[i][j]=String.valueOf(n);
 				}
 				else{ 
-					columnRoom[i][j]=String.valueOf(Yuyue[i][0][0])+"楼"; 
+					columnRoom[i][j]=String.valueOf(data.Yuyue[i][0][0])+"楼"; 
 				}
 			}
 		}
@@ -139,25 +107,10 @@ public class SeatOrdering extends JFrame {
 		
 		
 		
-//		final JButton Back = new JButton("返回");
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		comboBox1.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange()==ItemEvent.SELECTED && comboBox1.getSelectedIndex()!=0) {
-					Floor=comboBox1.getSelectedIndex();
+					data.Floor=comboBox1.getSelectedIndex();
 				}
 			}
 		});
@@ -167,8 +120,7 @@ public class SeatOrdering extends JFrame {
 		comboBox2.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange()==ItemEvent.SELECTED && comboBox2.getSelectedIndex()!=0) {
-					Start=comboBox2.getSelectedIndex();
-//					System.out.println(Start);
+					data.Start=comboBox2.getSelectedIndex();
 				}
 			}
 		});
@@ -177,8 +129,7 @@ public class SeatOrdering extends JFrame {
 		comboBox3.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange()==ItemEvent.SELECTED && comboBox3.getSelectedIndex()!=0) {
-					End=comboBox3.getSelectedIndex();
-//					System.out.println(End);
+					data.End=comboBox3.getSelectedIndex();
 				}
 			}
 		});
@@ -189,29 +140,26 @@ public class SeatOrdering extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-//				System.out.println(Floor);
-//				System.out.println(Start);
-//				System.out.println(End);
-				if(Floor!=0 && Start!=0 && End!=0) {
+				if(data.Floor!=0 && data.Start!=0 && data.End!=0) {
 					
 					
-					if(Start<End) {
+					if(data.Start<data.End) {
 						
 						int x=0;
 						label1:
-							for(int i=Start;i<End;i++) {
+							for(int i=data.Start;i<data.End;i++) {
 								for(int j=0;j<45;j++) {
-									if(CurrentUserName==Yuyue[Floor-1][i][j]) {
+									if(CurrentUserName==data.Yuyue[data.Floor-1][i][j]) {
 										x=1;
 										break label1;
 									}
 								}
 							}
 						label2:
-							for(int k=Start;k<End;k++) {
+							for(int k=data.Start;k<data.End;k++) {
 								for(int i=0;i<3;i++) {
 									for(int j=0;j<45;j++) {
-										if(CurrentUserName==Yuyue[i][k][j]) {
+										if(CurrentUserName==data.Yuyue[i][k][j]) {
 											x=1;
 											break label2;
 										}	
@@ -222,36 +170,23 @@ public class SeatOrdering extends JFrame {
 							new  YuyueError(SeatOrdering.this,2);
 						}
 						else {
-							for(int i=Start;i<End;i++) {	
+							for(int i=data.Start;i<data.End;i++) {	
 								for(int j=0;j<45;j++) {
-									if(Yuyue[Floor-1][i][j]==0) {
-										Yuyue[Floor-1][i][j]=CurrentUserName;
+									if(data.Yuyue[data.Floor-1][i][j]==0) {
+										data.Yuyue[data.Floor-1][i][j]=CurrentUserName;
 										
 										Calendar cal=Calendar.getInstance();
-										hh[Floor-1][i][j]=cal.get(Calendar.HOUR_OF_DAY);
-										mm[Floor-1][i][j]=cal.get(Calendar.MINUTE);
-										ss[Floor-1][i][j]=cal.get(Calendar.SECOND);
-//										System.out.println(hh[Floor-1][i][j]);
-//										System.out.println(mm[Floor-1][i][j]);
-//										System.out.println(ss[Floor-1][i][j]);
+										data.hh[data.Floor-1][i][j]=cal.get(Calendar.HOUR_OF_DAY);
+										data.mm[data.Floor-1][i][j]=cal.get(Calendar.MINUTE);
+										data.ss[data.Floor-1][i][j]=cal.get(Calendar.SECOND);
 										break;
 									}
 								}
 							}
-
-//							SOFrame.dispose();
-//							new  YuyueError(SeatOrdering.this,3);
-//							new SeatOrdering(CurrentUserName);
 							win.dispose();
 							new  YuyueError(SeatOrdering.this,3);
-							new AfterLogin((int) CurrentUserName);
-						
-							
-							
-							
+							new AfterLogin((int) CurrentUserName);							
 							}
-						
-				
 					}
 					else {
 						new  YuyueError(SeatOrdering.this,1);
@@ -260,35 +195,9 @@ public class SeatOrdering extends JFrame {
 				else {
 					new  YuyueError(SeatOrdering.this,0);
 				}
-				
-				
 			}
-			
 		});
-		
-		
-		
-		
-		
-		
-		
-//		Back.addActionListener(new ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//			
-//		});
-		
-		
-		
-		
-		
-		
-		
-		
+
 		p1.add(new JLabel("各个时间段自习室座位剩余情况"));
 		p2.add(scrollPane);
 		p3.add(new Label("卡号"));
@@ -300,30 +209,14 @@ public class SeatOrdering extends JFrame {
 		p4.add(new Label("结束时间"));
 		p4.add(comboBox3);
 		p5.add(Yuding);
-//		p6.add(Back);
-		
-		
-		
 		
 		c.add(p1);
 		c.add(p2);
 		c.add(p3);
 		c.add(p4);
 		c.add(p5);
-//		c.add(p6);
 		
-		
-		
-		
-//		SOFrame.setSize(600, 600);
-//		SOFrame.setResizable(false);
-//		SOFrame.setVisible(true);
-		con = c;
+		Container_SeatOrdering = c;
 	}
-
-//	public static void main(String[] args) {
-//		// TODO 自动生成的方法存根
-//		SeatOrdering s = new SeatOrdering(20186698);
-//	}
 
 }
