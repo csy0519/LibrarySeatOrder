@@ -8,7 +8,9 @@ public class MainProceed extends JFrame{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	
+	public static ImageIcon icon = new ImageIcon("data/library.png");
+	
 	public static void main(String[] args) throws Exception {
 		// TODO 自动生成的方法存根
 		new Thread(new TestRxTx()).start();

@@ -37,6 +37,7 @@ class LoginError extends JDialog{		//用户名不正确时弹出的对话框类
 			default : 								jp.add(new JLabel("未知错误，如影响使用请联系开发人员！", JLabel.CENTER), BorderLayout.CENTER);	break;
 		}
 
+		d.setIconImage(MainProceed.icon.getImage());
 		d.getContentPane().add(jp);
 		d.setSize(300, 200);
 		d.setResizable(false);
@@ -57,6 +58,7 @@ public class Login extends JFrame {
 	public static String CurrentCard = null;
 	public static boolean ThreadBlock = true;
 	public static JFrame f = new JFrame();
+	public static Image image = null;
 	
 	static final JTextField UserName = new JTextField("请刷卡", 10);
 	
@@ -84,6 +86,7 @@ public class Login extends JFrame {
 	public Login() {						//登录模块的具体实现
 		Container container = f.getContentPane();
 		container.setLayout(new GridLayout(4, 1));		//创建4行1列网格布局
+		f.setIconImage(MainProceed.icon.getImage());
 		
 		JPanel p1 = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		JPanel p2 = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));

@@ -33,6 +33,7 @@ class Registration extends JFrame {
 		}else {
 			jp.add(new JLabel("◊¢≤· ß∞‹£¨«Î÷ÿ ‘£°", JLabel.CENTER), BorderLayout.CENTER);
 		}
+		rd.setIconImage(MainProceed.icon.getImage());
 		rd.getContentPane().add(jp);
 		rd.setSize(300, 200);
 		rd.setResizable(false);
@@ -103,6 +104,7 @@ class Registration extends JFrame {
 		c.add(p3);
 		c.add(p4);
 		
+		reg.setIconImage(MainProceed.icon.getImage());
 		reg.setSize(400, 200);
 		reg.setResizable(false);
 		reg.setLocationRelativeTo(null);

@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 import login.Login;
+import login.MainProceed;
 import login.VerifyID;
 
 public class AfterLogin extends JFrame {
@@ -107,6 +108,7 @@ public class AfterLogin extends JFrame {
 		tab.addTab("密码修改", null, new JLabel("请在弹出窗口中完成操作", JLabel.CENTER));
 		tab.addTab("查询同伴", null, Companion.Container_Companion);
 		
+		af.setIconImage(MainProceed.icon.getImage());
 		af.setSize(600, 600);
 		af.setLocationRelativeTo(null);
 		af.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

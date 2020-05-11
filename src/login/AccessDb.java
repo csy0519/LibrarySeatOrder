@@ -10,9 +10,8 @@ public class AccessDb{
 	//查找方法   输入学号  返回用户的名字
 	public String searchname(long account)throws ClassNotFoundException,SQLException{
 		String name = null;
-		
 		Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
-		String accdbPath = "D:/library.accdb";
+		String accdbPath = "data/library.accdb";
 		Connection conn = DriverManager.getConnection("jdbc:ucanaccess://" + accdbPath);
 		Statement stmt = conn.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT*FROM student");
@@ -32,9 +31,8 @@ public class AccessDb{
 	//查找密码
 	public String searchpws(long account)throws ClassNotFoundException,SQLException{
 		String name = null;
-		
 		Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
-		String accdbPath = "D:/library.accdb";
+		String accdbPath = "data/library.accdb";
 		Connection conn = DriverManager.getConnection("jdbc:ucanaccess://" + accdbPath);
 		Statement stmt = conn.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT*FROM student");
@@ -55,7 +53,7 @@ public class AccessDb{
 	//注册方法 输入用户学号 用户名字 用户密码 注册用户信息
 	public void add(long account, String name, String Pws)throws ClassNotFoundException,SQLException{
 		Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
-		String accdbPath = "D:/library.accdb";
+		String accdbPath = "data/library.accdb";
 		Connection conn = DriverManager.getConnection("jdbc:ucanaccess://" + accdbPath);
 		Statement stmt = conn.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT*FROM student");
@@ -68,7 +66,7 @@ public class AccessDb{
 	//修改密码  用户已经登陆状态下 输入用户学号 用户新密码
 	public void updata(long aCcount,String pWs)throws ClassNotFoundException,SQLException{		//修改密码输入学号，密码
 		Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
-		String accdbPath = "D:/library.accdb";		//数据库地址
+		String accdbPath = "data/library.accdb";		//数据库地址
 		Connection conn = DriverManager.getConnection("jdbc:ucanaccess://" + accdbPath);
 		Statement stmt = conn.createStatement();						//链接数据库
 		ResultSet rs = stmt.executeQuery("SELECT*FROM student");		//rs为一条记录，student为表

@@ -31,6 +31,7 @@ class PswChange extends JFrame {
 				cp.add(new JLabel("两次密码输入不一致！", JLabel.CENTER), BorderLayout.CENTER);
 			}
 			
+			ConfirmErr.setIconImage(MainProceed.icon.getImage());
 			ConfirmErr.getContentPane().add(cp);
 			ConfirmErr.setSize(200, 100);
 			ConfirmErr.setResizable(false);
@@ -110,6 +111,7 @@ class PswChange extends JFrame {
 		c.add(p3);
 		c.add(p4);
 		
+		lost.setIconImage(MainProceed.icon.getImage());
 		lost.setSize(300, 200);
 		lost.setResizable(false);
 		lost.setLocationRelativeTo(null);
@@ -190,6 +192,7 @@ public class VerifyID extends JDialog {
 		c.add(p3);
 		c.add(p4);
 		
+		rd.setIconImage(MainProceed.icon.getImage());
 		rd.setSize(400, 200);
 		rd.setResizable(false);
 		rd.setLocationRelativeTo(null);
