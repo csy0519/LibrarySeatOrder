@@ -102,7 +102,7 @@ public class Login extends JFrame {
 		UserName.setEditable(false);		//禁止用户手动输入用户名
 		Password.setEchoChar('*');
 		
-		p1.add(new JLabel("欢迎使用图书馆座位预约系统，请刷卡"));
+		p1.add(new JLabel("欢迎使用自习室管理系统，请刷卡"));
 		p2.add(new JLabel("卡号"));
 		p2.add(UserName);
 		p3.add(new JLabel("密码"));
@@ -118,7 +118,7 @@ public class Login extends JFrame {
 		container.add(p4);
 		
 		f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		f.setTitle("图书馆座位预约系统");
+		f.setTitle("自习室管理系统");
 		f.setSize(600, 300);
 		f.setResizable(false);
 		f.setLocationRelativeTo(null);
