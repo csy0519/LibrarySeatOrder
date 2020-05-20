@@ -39,7 +39,7 @@ public class SeatOrdering extends JFrame {
 	public static Container Container_SeatOrdering;
 	
 	public SeatOrdering(JFrame win, long CurrentUserName){
-		JFrame SOFrame = new JFrame("座位预约");
+		JFrame SOFrame = new JFrame();
 		Container c = SOFrame.getContentPane();
 		c.setLayout(new GridLayout(5, 1));  //创建6行1列网格布局
 		Data data=new Data();
@@ -103,7 +103,7 @@ public class SeatOrdering extends JFrame {
 		
 		
 		
-		final JButton Yuding = new JButton("预定座位");
+		final JButton Yuding = new JButton("预约教室");
 		
 		
 		

@@ -18,7 +18,7 @@ public class AfterLogin extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	public AfterLogin(int UID) {
-		JFrame af = new JFrame("卡号：" + UID + "在线选座");
+		JFrame af = new JFrame("卡号：" + UID + "在线预约");
 		
 		final JMenuBar menubar = new JMenuBar();
 		final JMenu exit = new JMenu("退出 (E)");
